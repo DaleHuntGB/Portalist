@@ -36,6 +36,8 @@ local function CreatePortalButton(buttonName, spellData)
         PortalButton:SetAttribute("item", "item:" .. spellData.ID)
     end
 
+    PortalButton:SetScript("PostClick", function() Portality.DropdownMenu:Hide() end)
+
     local ButtonText = PortalButton:CreateFontString(nil, "OVERLAY")
     ButtonText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
     ButtonText:SetPoint("CENTER", PortalButton, "CENTER", 0, -1)
@@ -46,7 +48,7 @@ end
 
 function Portality:CreateDropdownMenu()
     local DropdownMenu = CreateFrame("Frame", "PortalityDropdownMenu", UIParent, "BackdropTemplate")
-    DropdownMenu:SetSize(300, 600)
+    DropdownMenu:SetSize(300, 1)
     DropdownMenu:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
     DropdownMenu:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = 1, })
     DropdownMenu:SetBackdropColor(0, 0, 0, 0.8)
@@ -68,11 +70,15 @@ function Portality:CreateDropdownMenu()
         end
         table.insert(Portality.DropdownMenu.Buttons, PortalButton)
     end
+
+   DropdownMenu:SetSize(300, #Portality.DropdownMenu.Buttons > 0 and #Portality.DropdownMenu.Buttons * 35 + 3 or 1)
 end
 
 function Portality:RefreshDropdownMenu()
     if not Portality.DropdownMenu then return end
+
     for _, button in ipairs(Portality.DropdownMenu.Buttons or {}) do button:Hide() button:SetParent(nil) end
+
     Portality.DropdownMenu.Buttons = {}
 
     Portality:GenerateDropdownData()
@@ -87,11 +93,19 @@ function Portality:RefreshDropdownMenu()
         end
         table.insert(Portality.DropdownMenu.Buttons, PortalButton)
     end
+
+    Portality.DropdownMenu:SetHeight(#Portality.DropdownMenu.Buttons > 0 and #Portality.DropdownMenu.Buttons * 35 + 3 or 1)
 end
 
 function Portality:ToggleDropdownMenu()
     if not Portality.DropdownMenu then Portality:CreateDropdownMenu() end
     if Portality.DropdownMenu:IsShown() then Portality.DropdownMenu:Hide() else Portality:RefreshDropdownMenu() Portality.DropdownMenu:Show() end
+    if Portality.DropdownMenu:IsShown() then
+        local cursorX, cursorY = GetCursorPosition()
+        local cursorScale = Portality.DropdownMenu:GetEffectiveScale()
+        Portality.DropdownMenu:ClearAllPoints()
+        Portality.DropdownMenu:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", cursorX / cursorScale, cursorY / cursorScale)
+    end
 end
 
 Portality_DropdownMenu = Portality.ToggleDropdownMenu
