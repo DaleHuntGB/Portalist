@@ -109,7 +109,7 @@ end
 function Portality:RefreshDropdownMenu()
     if not Portality.DropdownMenu then return end
 
-    for _, button in ipairs(Portality.DropdownMenu.Buttons or {}) do button:Hide() button:SetParent(nil) end
+    for _, portalButton in ipairs(Portality.DropdownMenu.Buttons or {}) do portalButton:Hide() portalButton:SetParent(nil) end
 
     Portality.DropdownMenu.Buttons = {}
 
