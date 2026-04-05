@@ -34,17 +34,19 @@ local function CreatePortalButton(buttonName, spellData)
     ButtonSpellText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
     ButtonSpellText:SetPoint("LEFT", PortalButton, "LEFT", 3, 0)
     ButtonSpellText:SetText(spellData.name)
+    ButtonSpellText:SetJustifyH("LEFT")
 
     local ButtonDurationText = ButtonDurationStatusBar:CreateFontString(nil, "OVERLAY")
     ButtonDurationText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
     ButtonDurationText:SetPoint("RIGHT", PortalButton, "RIGHT", -3, 0)
+    ButtonDurationText:SetJustifyH("RIGHT")
 
     if spellData.isSpell then
-        PortalButton:SetScript("OnUpdate", function(self, elapsed)
+        PortalButton:SetScript("OnUpdate", function()
             local spellCooldown = C_Spell.GetSpellCooldown(spellData.ID)
             if spellCooldown and spellCooldown.startTime > 0 then
                 local remainingCooldown = spellCooldown.startTime + spellCooldown.duration - GetTime()
-                ButtonDurationText:SetText(string.format("%02d:%02d", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                ButtonDurationText:SetText(string.format("|cFFCCCCCC%02d:%02d|r", math.floor(remainingCooldown / 60), remainingCooldown % 60))
                 ButtonDurationStatusBar:SetMinMaxValues(0, spellCooldown.duration)
                 ButtonDurationStatusBar:SetValue(remainingCooldown)
             else
@@ -55,11 +57,11 @@ local function CreatePortalButton(buttonName, spellData)
             end
         end)
     else
-        PortalButton:SetScript("OnUpdate", function(self, elapsed)
+        PortalButton:SetScript("OnUpdate", function()
             local itemCooldownStart, itemCooldownDuration = C_Item.GetItemCooldown(spellData.ID)
             if itemCooldownStart and itemCooldownStart > 0 then
                 local remainingCooldown = itemCooldownStart + itemCooldownDuration - GetTime()
-                ButtonDurationText:SetText(string.format("%02d:%02d", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                ButtonDurationText:SetText(string.format("|cFFCCCCCC%02d:%02d|r", math.floor(remainingCooldown / 60), remainingCooldown % 60))
                 ButtonDurationStatusBar:SetMinMaxValues(0, itemCooldownDuration)
                 ButtonDurationStatusBar:SetValue(remainingCooldown)
             else
