@@ -329,12 +329,12 @@ function Portality:GenerateDropdownData()
     local DropdownData = {}
     for spellID, isActive in pairs(Portality.DB.global.ChallengeModePortals) do
         if isActive and Portality:IsAvailableChallengeModePortal(spellID) then
-            table.insert(DropdownData, {ID = spellID, name = Portality:CreateDisplayName(spellID, true), isSpell = true})
+            table.insert(DropdownData, { ID = spellID, name = Portality:CreateDisplayName(spellID, true), isSpell = true })
         end
     end
     for itemID, isActive in pairs(Portality.DB.global.Hearthstones) do
         if isActive then
-            table.insert(DropdownData, {ID = itemID, name = Portality:CreateDisplayName(itemID, false), isSpell = false})
+            table.insert(DropdownData, { ID = itemID, name = Portality:CreateDisplayName(itemID, false), isSpell = false })
         end
     end
     Portality.DropdownData = DropdownData
