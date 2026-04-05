@@ -11,8 +11,3 @@ function AddOn:OnEnable()
     SLASH_PORTALITY2 = "/port"
     SlashCmdList["PORTALITY"] = function() Portality:CreateGUI() end
 end
-
-function Portality:ToggleDropdownMenu()
-    -- Toggle the dropdown menu. If it's open, close it. If it's closed, open it.
-    -- The dropdown should be populated with all active portals (from Data.ChallengeModePortals) and hearthstones (from Data.HearthstoneSpells).
-end
