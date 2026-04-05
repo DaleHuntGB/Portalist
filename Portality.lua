@@ -3,6 +3,7 @@ local AddOn = LibStub("AceAddon-3.0"):NewAddon("Portality")
 
 function AddOn:OnInitialize()
     Portality.DB = LibStub("AceDB-3.0"):New("PortalityDB", Portality:GetDefaults())
+    Portality:CreateOptions()
 end
 
 function AddOn:OnEnable()

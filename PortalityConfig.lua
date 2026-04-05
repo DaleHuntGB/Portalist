@@ -1,5 +1,7 @@
 local _, Portality = ...
 local AG = LibStub("AceGUI-3.0")
+local ACR = LibStub("AceConfigRegistry-3.0")
+local ACD = LibStub("AceConfigDialog-3.0")
 local isGUIOpen = false
 local GUIFrame = nil
 
@@ -159,4 +161,149 @@ function Portality:CreateGUI()
     TabGroup:SetFullWidth(true)
     TabGroup:SelectTab("ChallengeModePortals")
     GUIFrame:AddChild(TabGroup)
+end
+
+function Portality:CreateOptions()
+    local DB = Portality.DB.global
+
+    local function GetBinding(index)
+        return select(index, GetBindingKey("PORTALITY_OPEN")) or "None"
+    end
+
+    local function SetBindingKey(index, key)
+        local KeybindA, KeybindB = GetBindingKey("PORTALITY_OPEN")
+
+        if index == 1 then
+            if KeybindA then SetBinding(KeybindA, nil) end
+            if key then SetBinding(key, "PORTALITY_OPEN") end
+        else
+            if KeybindB then SetBinding(KeybindB, nil) end
+            if key then SetBinding(key, "PORTALITY_OPEN") end
+        end
+
+        SaveBindings(GetCurrentBindingSet())
+    end
+
+    local options = {
+        type = "group",
+        name = "Portality",
+        args = {
+            KeybindHeader = {
+                type = "header",
+                name = "Dropdown Menu Keybind",
+                order = 1,
+            },
+
+            KeybindOne = {
+                type = "keybinding",
+                name = "Primary Keybind",
+                order = 2,
+                get = function() return GetBinding(1) end,
+                set = function(_, key) SetBindingKey(1, key) end,
+            },
+
+            KeybindTwo = {
+                type = "keybinding",
+                name = "Secondary Keybind",
+                order = 3,
+                get = function() return GetBinding(2) end,
+                set = function(_, key) SetBindingKey(2, key) end,
+            },
+
+            ChallengeModePortals = {
+                type = "group",
+                name = "Challenge Mode Portals",
+                order = 10,
+                args = (function()
+                    local args = {}
+                    local order = 1
+                    for expansionIndex, expansionPortals in ipairs(Portality.Data.ChallengeModePortals) do
+                        local hasHeader = false
+                        for spellID, isAvailable in pairs(expansionPortals) do
+                            if isAvailable then
+                                if not hasHeader then
+                                    args["header_" .. order] = {
+                                        type = "header",
+                                        name = Portality.Data.ChallengeModePortalsByExpansion[expansionPortals],
+                                        order = order,
+                                    }
+                                    order = order + 1
+                                    hasHeader = true
+                                end
+
+                                args["spell_" .. expansionIndex .. "_" .. spellID] = {
+                                    type = "toggle",
+                                    name = Portality:CreateDisplayName(spellID, true),
+                                    order = order,
+                                    width = "full",
+                                    get = function() return DB.ChallengeModePortals[spellID] == true end,
+                                    set = function(_, val) DB.ChallengeModePortals[spellID] = val Portality:GenerateDropdownData() end,
+                                    disabled = function() return not Portality:IsLearnt(spellID, true) end,
+                                    descStyle = "hidden"
+                                }
+                                order = order + 1
+                            end
+                        end
+                    end
+
+                    return args
+                end)(),
+            },
+
+            Hearthstones = {
+                type = "group",
+                name = "Hearthstones",
+                order = 20,
+                args = (function()
+                    local args = {}
+                    local order = 1
+
+                    for itemID in pairs(Portality.Data.Hearthstones) do
+                        args["item_" .. itemID] = {
+                            type = "toggle",
+                            name = Portality:CreateDisplayName(itemID, false),
+                            order = order,
+                            width = "full",
+                            get = function() return DB.Hearthstones[itemID] == true end,
+                            set = function(_, val) DB.Hearthstones[itemID] = val Portality:GenerateDropdownData() end,
+                            disabled = function() return not Portality:IsLearnt(itemID, false) end,
+                            descStyle = "hidden"
+                        }
+                        order = order + 1
+                    end
+
+                    return args
+                end)(),
+            },
+
+            Wormholes = {
+                type = "group",
+                name = "Wormholes",
+                order = 30,
+                args = (function()
+                    local args = {}
+                    local order = 1
+
+                    for itemID in pairs(Portality.Data.Wormholes) do
+                        args["wormhole_" .. itemID] = {
+                            type = "toggle",
+                            name = Portality:CreateDisplayName(itemID, false),
+                            order = order,
+                            width = "full",
+                            get = function() return DB.Wormholes[itemID] == true end,
+                            set = function(_, val) DB.Wormholes[itemID] = val Portality:GenerateDropdownData() end,
+                            disabled = function() return not Portality:IsLearnt(itemID, false) end,
+                            descStyle = "hidden"
+                        }
+                        order = order + 1
+                    end
+
+                    return args
+                end)(),
+            },
+        },
+    }
+
+    ACR:RegisterOptionsTable("Portality", options)
+    ACD:AddToBlizOptions("Portality", "Portality")
 end

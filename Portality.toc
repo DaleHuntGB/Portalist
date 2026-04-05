@@ -4,6 +4,8 @@
 ## IconAtlas: dungeon
 ## Category-enUS: |cFF8080FFUnhalted|r Development
 
+Libs/Init.xml
+
 Data.lua
 Defaults.lua
 Dropdown.lua
