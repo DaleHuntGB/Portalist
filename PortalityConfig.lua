@@ -188,28 +188,32 @@ function Portality:CreateOptions()
         type = "group",
         name = "Portality",
         args = {
+            ConfigurationDescription = {
+                type = "description",
+                name = "`/port` will also open a configuration window.",
+                order = 0,
+            },
             KeybindHeader = {
                 type = "header",
-                name = "Dropdown Menu Keybind",
+                name = "Keybinds",
                 order = 1,
             },
-
             KeybindOne = {
                 type = "keybinding",
-                name = "Primary Keybind",
+                name = "",
                 order = 2,
+                width = "full",
                 get = function() return GetBinding(1) end,
                 set = function(_, key) SetBindingKey(1, key) end,
             },
-
             KeybindTwo = {
                 type = "keybinding",
-                name = "Secondary Keybind",
+                name = "",
                 order = 3,
+                width = "full",
                 get = function() return GetBinding(2) end,
                 set = function(_, key) SetBindingKey(2, key) end,
             },
-
             ChallengeModePortals = {
                 type = "group",
                 name = "Challenge Mode Portals",
