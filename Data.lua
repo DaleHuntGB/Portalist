@@ -333,7 +333,6 @@ Portality.Data.Portals = {
     [53142] = true,
     [281402] = true,
     [224871] = true,
-    [410081] = true,
     [33691] = true,
     [35717] = true,
     [49361] = true,
@@ -349,7 +348,6 @@ Portality.Data.PortalByName = {
     [132620] = "Vale of Eternal Blossoms",
     [32266] = "Exodar",
     [32267] = "Silvermoon (Burning Crusade)",
-    [410081] = "Hero's Path",
     [33691] = "Shattrath",
     [10059] = "Stormwind",
     [176246] = "Stormshield",
@@ -373,7 +371,7 @@ Portality.Data.PortalByName = {
     [11420] = "Thunder Bluff",
     [132626] = "Vale of Eternal Blossoms",
     [11416] = "Ironforge",
-    }
+}
 
 function Portality:CreateDisplayName(spellID, isSpell)
     local spellColour = Portality:IsLearnt(spellID, isSpell) and "|cFFAACCDD" or "|cFFFF4040"
