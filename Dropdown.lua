@@ -21,24 +21,37 @@ local function CreatePortalButton(buttonName, spellData)
 
     PortalButton:SetScript("PostClick", function() Portality.DropdownMenu:Hide() end)
 
-    local ButtonText = PortalButton:CreateFontString(nil, "OVERLAY")
-    ButtonText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-    ButtonText:SetPoint("LEFT", PortalButton, "LEFT", 3, 0)
-    ButtonText:SetText(spellData.name)
+    local ButtonDurationStatusBar = CreateFrame("StatusBar", nil, PortalButton)
+    ButtonDurationStatusBar:SetPoint("TOPLEFT", PortalButton, "TOPLEFT", 1, -1)
+    ButtonDurationStatusBar:SetPoint("BOTTOMRIGHT", PortalButton, "BOTTOMRIGHT", -1, 1)
+    ButtonDurationStatusBar:SetHeight(30)
+    ButtonDurationStatusBar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+    ButtonDurationStatusBar:SetStatusBarColor(0.5, 0.5, 0.5, 0.8)
+    ButtonDurationStatusBar:SetMinMaxValues(0, 1)
+    ButtonDurationStatusBar:SetValue(0)
 
-    local ButtonDuration = PortalButton:CreateFontString(nil, "OVERLAY")
-    ButtonDuration:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-    ButtonDuration:SetPoint("RIGHT", PortalButton, "RIGHT", -3, 0)
+    local ButtonSpellText = ButtonDurationStatusBar:CreateFontString(nil, "OVERLAY")
+    ButtonSpellText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+    ButtonSpellText:SetPoint("LEFT", PortalButton, "LEFT", 3, 0)
+    ButtonSpellText:SetText(spellData.name)
+
+    local ButtonDurationText = ButtonDurationStatusBar:CreateFontString(nil, "OVERLAY")
+    ButtonDurationText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+    ButtonDurationText:SetPoint("RIGHT", PortalButton, "RIGHT", -3, 0)
 
     if spellData.isSpell then
         PortalButton:SetScript("OnUpdate", function(self, elapsed)
             local spellCooldown = C_Spell.GetSpellCooldown(spellData.ID)
             if spellCooldown and spellCooldown.startTime > 0 then
                 local remainingCooldown = spellCooldown.startTime + spellCooldown.duration - GetTime()
-                ButtonDuration:SetText(string.format("%02d:%02d", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                ButtonDurationText:SetText(string.format("%02d:%02d", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                ButtonDurationStatusBar:SetMinMaxValues(0, spellCooldown.duration)
+                ButtonDurationStatusBar:SetValue(remainingCooldown)
             else
-                ButtonDuration:SetText("")
-                self:SetScript("OnUpdate", nil)
+                ButtonDurationText:SetText("")
+                ButtonDurationStatusBar:SetMinMaxValues(0, 1)
+                ButtonDurationStatusBar:SetValue(0)
+                PortalButton:SetScript("OnUpdate", nil)
             end
         end)
     else
@@ -46,13 +59,19 @@ local function CreatePortalButton(buttonName, spellData)
             local itemCooldownStart, itemCooldownDuration = C_Item.GetItemCooldown(spellData.ID)
             if itemCooldownStart and itemCooldownStart > 0 then
                 local remainingCooldown = itemCooldownStart + itemCooldownDuration - GetTime()
-                ButtonDuration:SetText(string.format("%02d:%02d", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                ButtonDurationText:SetText(string.format("%02d:%02d", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                ButtonDurationStatusBar:SetMinMaxValues(0, itemCooldownDuration)
+                ButtonDurationStatusBar:SetValue(remainingCooldown)
             else
-                ButtonDuration:SetText("")
-                self:SetScript("OnUpdate", nil)
+                ButtonDurationText:SetText("")
+                ButtonDurationStatusBar:SetMinMaxValues(0, 1)
+                ButtonDurationStatusBar:SetValue(0)
+                PortalButton:SetScript("OnUpdate", nil)
             end
         end)
     end
+
+
 
     return PortalButton
 end
