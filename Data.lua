@@ -376,12 +376,12 @@ function Portality:IsLearnt(spellID, isSpell)
 end
 
 function Portality:IsSpellUsable(spellID)
-    local isUsable = C_Spell.IsSpellUsable(spellID)
+    local isUsable = C_Spell.IsSpellUsable(spellID) and Portality:IsLearnt(spellID, true)
     return isUsable
 end
 
 function Portality:IsItemUsable(itemID)
-    local isUsable = C_ToyBox.IsToyUsable(itemID)
+    local isUsable = C_ToyBox.IsToyUsable(itemID) and Portality:IsLearnt(itemID, false)
     return isUsable
 end
 

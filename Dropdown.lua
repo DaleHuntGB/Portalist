@@ -73,8 +73,6 @@ local function CreatePortalButton(buttonName, spellData)
         end)
     end
 
-
-
     return PortalButton
 end
 
@@ -101,14 +99,19 @@ function Portality:CreateDropdownMenu()
     Portality:GenerateDropdownData()
 
     for spellIndex, spellData in ipairs(Portality.DropdownData) do
-        local buttonName = "PortalityDropdownButton" .. spellIndex
-        local PortalButton = CreatePortalButton(buttonName, spellData)
-        if spellIndex == 1 then
-            PortalButton:SetPoint("TOP", DropdownMenu, "TOP", 0, -2)
-        else
-            PortalButton:SetPoint("TOP", Portality.DropdownMenu.Buttons[spellIndex - 1], "BOTTOM", 0, -1)
+        local isUsable = false;
+        if spellData.isSpell then isUsable = Portality:IsSpellUsable(spellData.ID) else isUsable = Portality:IsItemUsable(spellData.ID) end
+        if isUsable then
+            local buttonName = "PortalityDropdownButton" .. spellIndex
+            local PortalButton = CreatePortalButton(buttonName, spellData)
+            DevTool:AddData(PortalButton)
+            if spellIndex == 1 then
+                PortalButton:SetPoint("TOP", DropdownMenu, "TOP", 0, -2)
+            else
+                PortalButton:SetPoint("TOP", Portality.DropdownMenu.Buttons[spellIndex - 1], "BOTTOM", 0, -1)
+            end
+            table.insert(Portality.DropdownMenu.Buttons, PortalButton)
         end
-        table.insert(Portality.DropdownMenu.Buttons, PortalButton)
     end
 
    DropdownMenu:SetSize(300, #Portality.DropdownMenu.Buttons > 0 and #Portality.DropdownMenu.Buttons * 33 + 3 or 32)
