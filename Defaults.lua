@@ -139,7 +139,7 @@ local Defaults = {
             [281402] = false,
             [344597] = false,
             [395289] = false
-        }
+        },
     }
 }
 
