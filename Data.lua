@@ -197,7 +197,6 @@ function Portality:IsLearnt(spellID, isSpell)
     if isSpell then
         return C_SpellBook.IsSpellKnown(spellID)
     else
-        print(spellID, Portality:CreateDisplayName(spellID, isSpell))
         return PlayerHasToy(spellID)
     end
 end
