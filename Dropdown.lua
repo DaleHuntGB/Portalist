@@ -104,7 +104,6 @@ function Portality:CreateDropdownMenu()
         if isUsable then
             local buttonName = "PortalityDropdownButton" .. spellIndex
             local PortalButton = CreatePortalButton(buttonName, spellData)
-            DevTool:AddData(PortalButton)
             if spellIndex == 1 then
                 PortalButton:SetPoint("TOP", DropdownMenu, "TOP", 0, -2)
             else
