@@ -401,6 +401,16 @@ function Portalist:IsLearnt(spellID, isSpell)
     end
 end
 
+function Portalist:FetchTooltipInformation(parent, spellID, isSpell)
+    GameTooltip:SetOwner(parent, "ANCHOR_CURSOR")
+    if isSpell then
+        GameTooltip:SetSpellByID(spellID)
+    else
+        GameTooltip:SetToyByItemID(spellID)
+    end
+    GameTooltip:Show()
+end
+
 function Portalist:IsSpellUsable(spellID)
     local isUsable = C_Spell.IsSpellUsable(spellID) and Portalist:IsLearnt(spellID, true)
     return isUsable
