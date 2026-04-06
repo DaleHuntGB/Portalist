@@ -114,11 +114,18 @@ function Portalist:CreateDropdownMenu()
     end
 
    DropdownMenu:SetSize(400, #Portalist.DropdownMenu.Buttons > 0 and #Portalist.DropdownMenu.Buttons * 33 + 3 or 32)
-   if #Portalist.DropdownMenu.Buttons == 0 then
-        Portalist.DropdownMenu.DisclaimerText:Show()
-    else
-        Portalist.DropdownMenu.DisclaimerText:Hide()
-    end
+   if #Portalist.DropdownMenu.Buttons == 0 then Portalist.DropdownMenu.DisclaimerText:Show() else Portalist.DropdownMenu.DisclaimerText:Hide() end
+
+    local DropdownMenuClickCatcher = CreateFrame("Frame", nil, UIParent)
+    DropdownMenuClickCatcher:SetAllPoints(UIParent)
+    DropdownMenuClickCatcher:SetFrameStrata("LOW")
+    DropdownMenuClickCatcher:SetFrameLevel(1)
+    DropdownMenuClickCatcher:EnableMouse(true)
+    DropdownMenuClickCatcher:SetPropagateMouseClicks(true)
+    DropdownMenuClickCatcher:SetScript("OnMouseDown", function() if Portalist.DropdownMenu and Portalist.DropdownMenu:IsShown() then Portalist.DropdownMenu:Hide() DropdownMenuClickCatcher:Hide() end end)
+    DropdownMenuClickCatcher:Hide()
+
+    Portalist.DropdownClickCatcher = DropdownMenuClickCatcher
 end
 
 function Portalist:RefreshDropdownMenu()
@@ -151,13 +158,20 @@ end
 
 function Portalist:ToggleDropdownMenu()
     if not Portalist.DropdownMenu then Portalist:CreateDropdownMenu() end
-    if Portalist.DropdownMenu:IsShown() then Portalist.DropdownMenu:Hide() else Portalist:RefreshDropdownMenu() Portalist.DropdownMenu:Show() end
     if Portalist.DropdownMenu:IsShown() then
+        Portalist.DropdownMenu:Hide()
+        Portalist.DropdownClickCatcher:Hide()
+    else
+        Portalist:RefreshDropdownMenu()
+        Portalist.DropdownClickCatcher:Show()
+        Portalist.DropdownMenu:Show()
+
         local cursorX, cursorY = GetCursorPosition()
         local cursorScale = Portalist.DropdownMenu:GetEffectiveScale()
         Portalist.DropdownMenu:ClearAllPoints()
         Portalist.DropdownMenu:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", cursorX / cursorScale, cursorY / cursorScale)
     end
 end
+
 
 Portalist_DropdownMenu = Portalist.ToggleDropdownMenu
