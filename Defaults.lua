@@ -128,6 +128,10 @@ local Defaults = {
             [253629]    = false,
             [140192]    = false,
             [110560]    = false,
+            [184353]    = false,
+            [182773]    = false,
+            [183716]    = false,
+            [180290]    = false,
         },
         Wormholes = {
             [18984]     = false,

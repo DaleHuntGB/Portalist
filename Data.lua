@@ -243,6 +243,10 @@ Portalist.Data.Hearthstones = {
     [253629] = true,
     [140192] = true,
     [110560] = true,
+    [184353] = true,
+    [182773] = true,
+    [183716] = true,
+    [180290] = true,
 }
 
 Portalist.Data.Wormholes = {
