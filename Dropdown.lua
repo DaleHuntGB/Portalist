@@ -49,7 +49,11 @@ local function CreatePortalButton(buttonName, spellData)
             local spellCooldown = C_Spell.GetSpellCooldown(spellData.ID)
             if spellCooldown and spellCooldown.startTime > 0 then
                 local remainingCooldown = spellCooldown.startTime + spellCooldown.duration - GetTime()
-                ButtonDurationText:SetText(string.format("%02d:%02d", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                if remainingCooldown > 3600 then
+                    ButtonDurationText:SetText(string.format("%1dh %02dm", math.floor(remainingCooldown / 3600), math.floor((remainingCooldown % 3600) / 60)))
+                else
+                    ButtonDurationText:SetText(string.format("%02dm %02ds", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                end
                 ButtonDurationStatusBar:SetMinMaxValues(0, spellCooldown.duration)
                 ButtonDurationStatusBar:SetValue(remainingCooldown)
             else
@@ -64,7 +68,11 @@ local function CreatePortalButton(buttonName, spellData)
             local itemCooldownStart, itemCooldownDuration = C_Item.GetItemCooldown(spellData.ID)
             if itemCooldownStart and itemCooldownStart > 0 then
                 local remainingCooldown = itemCooldownStart + itemCooldownDuration - GetTime()
-                ButtonDurationText:SetText(string.format("%02d:%02d", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                if remainingCooldown > 3600 then
+                    ButtonDurationText:SetText(string.format("%1dh %02dm", math.floor(remainingCooldown / 3600), math.floor((remainingCooldown % 3600) / 60)))
+                else
+                    ButtonDurationText:SetText(string.format("%02dm %02ds", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+                end
                 ButtonDurationStatusBar:SetMinMaxValues(0, itemCooldownDuration)
                 ButtonDurationStatusBar:SetValue(remainingCooldown)
             else
