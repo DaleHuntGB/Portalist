@@ -13,16 +13,11 @@ Portalist.Data.ChallengeModePortals = {
         [159898]    = true, -- Skyreach
         [1254555]   = true, -- Pit of Saron
     },
-    -- Midnight
     {
         [1254400] = true, -- Windrunner Spire
         [1254572] = true, -- Magisters' Terrace
-        --[2813] = , -- Murder Row
-        --[2825] = , -- Den of Nalorakk
-        --[2859] = , -- The Blinding Vale
         [1254559] = true, -- Maisara Caverns
         [1254563] = true, -- Nexus-Point Xenas
-        --[2923] = , -- Voidscar Arena
     },
     -- The War Within
     {
@@ -65,29 +60,20 @@ Portalist.Data.ChallengeModePortals = {
     {
         [424187] = true, -- Atal'Dazar
         [410071] = true, -- Freehold
-        --[1762] = , -- King's Rest
-        --[1864] = , -- Shrine of the Storm
         [445418] = UnitFactionGroup("player") == "Alliance", -- Siege of Boralus (Alliance)
         [464256] = UnitFactionGroup("player") == "Horde", -- Siege of Boralus (Horde)
-        --[1771] = , -- Tol Dagor
         [410074] = true, -- The Underrot
         [424167] = true, -- Waycrest Manor
         [373274] = true, -- Operation: Mechagon
     },
     -- Legion
     {
-        --[1544] = , -- Assault on Violet Hold
-        --[1677] = , -- Cathedral of Eternal Night
         [393766] = true, -- Court of Stars
         [373262] = true, -- Return to Karazhan
         [424153] = true, -- Black Rook Hold
-        --[1516] = , -- The Arcway
         [424163] = true, -- Darkheart Thicket
         [410078] = true, -- Neltharion's Lair
-        --[1456] = , -- Eye of Azshara
-        --[1492] = , -- Maw of Souls
         [393764] = true, -- Halls of Valor
-        --[1493] = , -- Vault of the Wardens
         [1254551] = true, -- Seat of the Triumvirate
     },
     -- Warlords of Draenor
@@ -111,41 +97,17 @@ Portalist.Data.ChallengeModePortals = {
         [131231] = true, -- Scarlet Halls
         [131232] = true, -- Scholomance
         [131228] = true, -- Siege of Niuzao Temple
-        --[1112] = , -- Pursuing the Black Harvest
         [131229] = true, -- Scarlet Monastery
     },
     -- Cataclysm
     {
-        --[859] = , -- Zul'Gurub
         [424142] = true, -- Throne of the Tides
-        --[644] = , -- Halls of Origination
-        --[645] = , -- Blackrock Caverns
-        --[755] = , -- Lost City of the Tol'vir
-        --[725] = , -- The Stonecore
-        --[938] = , -- End Time
-        --[939] = , -- Well of Eternity
-        --[940] = , -- Hour of Twilight
         [410080] = true, -- The Vortex Pinnacle
         [445424] = true, -- Grim Batol
     },
     -- Wrath of the Lich King
     {
-        --[576] = , -- The Nexus
-        --[578] = , -- The Oculus
-        --[608] = , -- Violet Hold
-        --[595] = , -- The Culling of Stratholme
-        --[619] = , -- Ahn'kahet: The Old Kingdom
-        --[604] = , -- Gundrak
-        --[574] = , -- Utgarde Keep
-        --[575] = , -- Utgarde Pinnacle
-        --[602] = , -- Halls of Lightning
-        --[601] = , -- Azjol-Nerub
         [1254555] = true, -- Pit of Saron
-        --[599] = , -- Halls of Stone
-        --[600] = , -- Drak'Tharon Keep
-        --[650] = , -- Trial of the Champion
-        --[668] = , -- Halls of Reflection
-        --[632] = , -- The Forge of Souls
     },
 }
 
