@@ -351,6 +351,7 @@ Portalist.Data.Mailboxes = {
 Portalist.Data.Miscellaneous = {
     [1231411]      = true,
     [126892]       = true,
+    [460905]       = true,
 }
 
 function Portalist:CreateDisplayName(spellID, isSpell)

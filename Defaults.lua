@@ -174,6 +174,7 @@ local Defaults = {
         Miscellaneous = {
             [1231411]  = false,
             [126892]   = false,
+            [460905]   = false,
         },
     }
 }
