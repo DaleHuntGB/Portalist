@@ -3,110 +3,112 @@ local _, Portalist = ...
 Portalist.Data = {}
 
 Portalist.Data.ChallengeModePortals = {
-    {
+    -- Current Active Season
+    [1] = {
+        [159898]    = true, -- Skyreach
+        [393273]    = true, -- Algeth'ar Academy
         [1254400]   = true, -- Windrunner Spire
-        [1254572]   = true, -- Magisters' Terrace
+        [1254551]   = true, -- Seat of the Triumvirate
+        [1254555]   = true, -- Pit of Saron
         [1254559]   = true, -- Maisara Caverns
         [1254563]   = true, -- Nexus-Point Xenas
-        [393273]    = true, -- Algeth'ar Academy
-        [1254551]   = true, -- Seat of the Triumvirate
-        [159898]    = true, -- Skyreach
-        [1254555]   = true, -- Pit of Saron
+        [1254572]   = true, -- Magisters' Terrace
     },
-    {
+    -- Midnight
+    [2] = {
         [1254400] = true, -- Windrunner Spire
-        [1254572] = true, -- Magisters' Terrace
         [1254559] = true, -- Maisara Caverns
         [1254563] = true, -- Nexus-Point Xenas
+        [1254572] = true, -- Magisters' Terrace
     },
     -- The War Within
-    {
-        [445443] = true, -- The Rookery
-        [445444] = true, -- Priory of the Sacred Flame
-        [445441] = true, -- Darkflame Cleft
+    [3] = {
         [445269] = true, -- The Stonevault
+        [445414] = true, --     The Dawnbreaker
+        [445416] = true, -- City of Threads
         [445417] = true, -- Ara-Kara, City of Echoes
         [445440] = true, -- Cinderbrew Meadery
-        [445414] = true, -- The Dawnbreaker
-        [445416] = true, -- City of Threads
+        [445441] = true, -- Darkflame Cleft
+        [445443] = true, -- The Rookery
+        [445444] = true, -- Priory of the Sacred Flame
         [1216786] = true, -- Operation: Floodgate
         [1237215] = true, -- Eco-Dome Al'dani
     },
     -- Dragonflight
-    {
+    [4] = {
         [393222] = true, -- Uldaman: Legacy of Tyr
-        [393279] = true, -- The Azure Vault
-        [393262] = true, -- The Nokhud Offensive
-        [393276] = true, -- Neltharus
-        [393267] = true, -- Brackenhide Hollow
         [393256] = true, -- Ruby Life Pools
+        [393262] = true, -- The Nokhud Offensive
+        [393267] = true, -- Brackenhide Hollow
         [393273] = true, -- Algeth'ar Academy
+        [393276] = true, -- Neltharus
+        [393279] = true, -- The Azure Vault
         [393283] = true, -- Halls of Infusion
         [424197] = true, -- Dawn of the Infinite
     },
     -- Shadowlands
-    {
-        [354469] = true, -- Sanguine Depths
-        [354466] = true, -- Spires of Ascension
+    [5] = {
         [354462] = true, -- The Necrotic Wake
-        [354465] = true, -- Halls of Atonement
         [354463] = true, -- Plaguefall
         [354464] = true, -- Mists of Tirna Scithe
-        [354468] = true, -- De Other Side
+        [354465] = true, -- Halls of Atonement
+        [354466] = true, -- Spires of Ascension
         [354467] = true, -- Theater of Pain
+        [354468] = true, -- De Other Side
+        [354469] = true, -- Sanguine Depths
         [367416] = true, -- Tazavesh, the Veiled Market
     },
     -- Battle for Azeroth
-    {
-        [424187] = true, -- Atal'Dazar
+    [6] = {
+        [373274] = true, -- Operation: Mechagon
         [410071] = true, -- Freehold
-        [445418] = UnitFactionGroup("player") == "Alliance", -- Siege of Boralus (Alliance)
-        [464256] = UnitFactionGroup("player") == "Horde", -- Siege of Boralus (Horde)
         [410074] = true, -- The Underrot
         [424167] = true, -- Waycrest Manor
-        [373274] = true, -- Operation: Mechagon
+        [424187] = true, -- Atal'Dazar
+        [445418] = UnitFactionGroup("player") == "Alliance", -- Siege of Boralus (Alliance)
+        [464256] = UnitFactionGroup("player") == "Horde", -- Siege of Boralus (Horde)
     },
     -- Legion
-    {
-        [393766] = true, -- Court of Stars
+    [7] = {
         [373262] = true, -- Return to Karazhan
+        [393764] = true, -- Halls of Valor
+        [393766] = true, -- Court of Stars
+        [410078] = true, -- Neltharion's Lair
         [424153] = true, -- Black Rook Hold
         [424163] = true, -- Darkheart Thicket
-        [410078] = true, -- Neltharion's Lair
-        [393764] = true, -- Halls of Valor
         [1254551] = true, -- Seat of the Triumvirate
     },
     -- Warlords of Draenor
-    {
-        [159898] = true, -- Skyreach -- XXX 1254557 was also added, which will be used..?
+    [8] = {
+        [159895] = true, -- Bloodmaul Slag Mines
+        [159896] = true, -- Iron Docks
+        [159897] = true, -- Auchindoun
+        [159898] = true, -- Skyreach
         [159899] = true, -- Shadowmoon Burial Grounds
         [159900] = true, -- Grimrail Depot
         [159901] = true, -- The Everbloom
-        [159896] = true, -- Iron Docks
-        [159897] = true, -- Auchindoun
-        [159895] = true, -- Bloodmaul Slag Mines
         [159902] = true, -- Upper Blackrock Spire
     },
     -- Mists of Pandaria
-    {
-        [131206] = true, -- Shado-Pan Monastery
+    [9] = {
         [131204] = true, -- Temple of the Jade Serpent
         [131205] = true, -- Stormstout Brewery
-        [131225] = true, -- Gate of the Setting Sun
+        [131206] = true, -- Shado-Pan Monastery
         [131222] = true, -- Mogu'shan Palace
-        [131231] = true, -- Scarlet Halls
-        [131232] = true, -- Scholomance
+        [131225] = true, -- Gate of the Setting Sun
         [131228] = true, -- Siege of Niuzao Temple
         [131229] = true, -- Scarlet Monastery
+        [131231] = true, -- Scarlet Halls
+        [131232] = true, -- Scholomance
     },
     -- Cataclysm
-    {
-        [424142] = true, -- Throne of the Tides
+    [10] = {
         [410080] = true, -- The Vortex Pinnacle
+        [424142] = true, -- Throne of the Tides
         [445424] = true, -- Grim Batol
     },
     -- Wrath of the Lich King
-    {
+    [11] = {
         [1254555] = true, -- Pit of Saron
     },
 }
