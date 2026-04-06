@@ -26,13 +26,13 @@ function Portalist:CreateGUI()
 
     local keybindButton = AG:Create("Button")
     keybindButton:SetRelativeWidth(0.5)
-    keybindButton:SetText(select(1, GetBindingKey("PORTALITY_OPEN")) or "None")
+    keybindButton:SetText(select(1, GetBindingKey("PORTALIST_OPEN")) or "None")
     keybindButton:SetCallback("OnClick", function() Portalist.ActiveKeybind = 1 Portalist.KeybindCaptureFrame:Show() end)
     KeybindContainer:AddChild(keybindButton)
 
     local keybindButtonTwo = AG:Create("Button")
     keybindButtonTwo:SetRelativeWidth(0.5)
-    keybindButtonTwo:SetText(select(2, GetBindingKey("PORTALITY_OPEN")) or "None")
+    keybindButtonTwo:SetText(select(2, GetBindingKey("PORTALIST_OPEN")) or "None")
     keybindButtonTwo:SetCallback("OnClick", function() Portalist.ActiveKeybind = 2 Portalist.KeybindCaptureFrame:Show() end)
     KeybindContainer:AddChild(keybindButtonTwo)
 
@@ -49,7 +49,7 @@ function Portalist:CreateGUI()
         keybindCaptureFrame:SetScript("OnKeyDown", function(_, key)
             if key == "LSHIFT" or key == "RSHIFT" or key == "LCTRL" or key == "RCTRL" or key == "LALT" or key == "RALT" then return end
 
-            local KeybindA, KeybindB = GetBindingKey("PORTALITY_OPEN")
+            local KeybindA, KeybindB = GetBindingKey("PORTALIST_OPEN")
             local activeKeybind = Portalist.ActiveKeybind
             if not activeKeybind then return end
 
@@ -63,10 +63,10 @@ function Portalist:CreateGUI()
 
             if activeKeybind == 1 then
                 if KeybindA then SetBinding(KeybindA, nil) end
-                if key ~= "ESCAPE" then SetBinding(keyCombo, "PORTALITY_OPEN") end
+                if key ~= "ESCAPE" then SetBinding(keyCombo, "PORTALIST_OPEN") end
             elseif activeKeybind == 2 then
                 if KeybindB then SetBinding(KeybindB, nil) end
-                if key ~= "ESCAPE" then SetBinding(keyCombo, "PORTALITY_OPEN") end
+                if key ~= "ESCAPE" then SetBinding(keyCombo, "PORTALIST_OPEN") end
             end
 
             SaveBindings(GetCurrentBindingSet())
@@ -74,7 +74,7 @@ function Portalist:CreateGUI()
         end)
 
         keybindCaptureFrame:SetScript("OnHide", function()
-            local KeybindA, KeybindB = GetBindingKey("PORTALITY_OPEN")
+            local KeybindA, KeybindB = GetBindingKey("PORTALIST_OPEN")
             keybindButton:SetText(KeybindA or "None")
             keybindButtonTwo:SetText(KeybindB or "None")
             Portalist.ActiveKeybind = nil
