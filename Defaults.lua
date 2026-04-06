@@ -140,6 +140,12 @@ local Defaults = {
             [344597] = false,
             [395289] = false
         },
+        Mailboxes = {
+            [194885] = false,
+            [156833] = false,
+            [264695] = false,
+            [40768] = false,
+        }
     }
 }
 

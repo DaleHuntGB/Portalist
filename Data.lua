@@ -373,6 +373,13 @@ Portality.Data.PortalByName = {
     [11416] = "Ironforge",
 }
 
+Portality.Data.Mailboxes = {
+    [194885] = true,
+    [156833] = true,
+    [264695] = true,
+    [40768] = true,
+}
+
 function Portality:CreateDisplayName(spellID, isSpell)
     local spellColour = Portality:IsLearnt(spellID, isSpell) and "|cFFAACCDD" or "|cFFFF4040"
     if isSpell then
@@ -414,29 +421,40 @@ function Portality:GenerateDropdownData()
 
     for spellID, isActive in pairs(Portality.DB.global.ChallengeModePortals) do
         if isActive and Portality:IsSpellUsable(spellID) then
-            table.insert(DropdownData, { ID = spellID, name = Portality:CreateDisplayName(spellID, true), isSpell = true })
+            table.insert(DropdownData, { ID = spellID, name = Portality:CreateDisplayName(spellID, true), sortOrder = 2 })
         end
     end
 
     for portalID, isActive in pairs(Portality.DB.global.Portals) do
         if isActive and Portality:IsSpellUsable(portalID) then
-            table.insert(DropdownData, { ID = portalID, name = Portality:CreateDisplayName(portalID, true), isSpell = true })
+            table.insert(DropdownData, { ID = portalID, name = Portality:CreateDisplayName(portalID, true), sortOrder = 5 })
         end
     end
 
     for itemID, isActive in pairs(Portality.DB.global.Hearthstones) do
         if isActive and Portality:IsItemUsable(itemID) then
-            table.insert(DropdownData, { ID = itemID, name = Portality:CreateDisplayName(itemID, false), isSpell = false })
+            table.insert(DropdownData, { ID = itemID, name = Portality:CreateDisplayName(itemID, false), sortOrder = 1 })
         end
     end
 
     for wormholeID, isActive in pairs(Portality.DB.global.Wormholes) do
         if isActive and Portality:IsItemUsable(wormholeID) then
-            table.insert(DropdownData, { ID = wormholeID, name = Portality:CreateDisplayName(wormholeID, false), isSpell = false })
+            table.insert(DropdownData, { ID = wormholeID, name = Portality:CreateDisplayName(wormholeID, false), sortOrder = 3 })
         end
     end
 
-    table.sort(DropdownData, function(a, b) if a.isSpell ~= b.isSpell then return not a.isSpell end return a.name < b.name end)
+    for mailBoxID, isActive in pairs(Portality.DB.global.Mailboxes) do
+        if isActive and Portality:IsItemUsable(mailBoxID) then
+            table.insert(DropdownData, { ID = mailBoxID, name = Portality:CreateDisplayName(mailBoxID, false), sortOrder = 4 })
+        end
+    end
+
+    table.sort(DropdownData, function(a, b)
+        if a.sortOrder ~= b.sortOrder then
+            return a.sortOrder < b.sortOrder
+        end
+        return a.name < b.name
+    end)
 
     Portality.DropdownData = DropdownData
 end

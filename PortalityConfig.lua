@@ -9,7 +9,6 @@ function Portality:CreateGUI()
     isGUIOpen = true
     GUIFrame = AG:Create("Frame")
     GUIFrame:SetTitle("|A:dungeon:18:18|a|cFF8080FFPortality|r")
-    GUIFrame:SetStatusText("Set Dropdown Keybind in Keybindings Menu")
     GUIFrame:SetLayout("Flow")
     GUIFrame:SetWidth(800)
     GUIFrame:SetHeight(600)
@@ -158,6 +157,8 @@ function Portality:CreateGUI()
             CreateToggleList(GUIContainer, Portality.Data.Wormholes, DB.Wormholes, false)
         elseif TabGroup == "Portals" then
             CreateToggleList(GUIContainer, Portality.Data.Portals, DB.Portals, true)
+        elseif TabGroup == "Mailboxes" then
+            CreateToggleList(GUIContainer, Portality.Data.Mailboxes, DB.Mailboxes, false)
         end
     end
 
@@ -168,6 +169,7 @@ function Portality:CreateGUI()
         { text = "Hearthstones", value = "Hearthstones" },
         { text = "Wormholes", value = "Wormholes" },
         { text = "Portals", value = "Portals" },
+        { text = "Mailboxes", value = "Mailboxes" }
     })
     TabGroup:SetCallback("OnGroupSelected", SelectTabGroup)
     TabGroup:SetFullHeight(true)
