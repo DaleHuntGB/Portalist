@@ -116,16 +116,18 @@ function Portalist:CreateDropdownMenu()
    DropdownMenu:SetSize(400, #Portalist.DropdownMenu.Buttons > 0 and #Portalist.DropdownMenu.Buttons * 33 + 3 or 32)
    if #Portalist.DropdownMenu.Buttons == 0 then Portalist.DropdownMenu.DisclaimerText:Show() else Portalist.DropdownMenu.DisclaimerText:Hide() end
 
-    local DropdownMenuClickCatcher = CreateFrame("Frame", nil, UIParent)
-    DropdownMenuClickCatcher:SetAllPoints(UIParent)
-    DropdownMenuClickCatcher:SetFrameStrata("LOW")
-    DropdownMenuClickCatcher:SetFrameLevel(1)
-    DropdownMenuClickCatcher:EnableMouse(true)
-    DropdownMenuClickCatcher:SetPropagateMouseClicks(true)
-    DropdownMenuClickCatcher:SetScript("OnMouseDown", function() if Portalist.DropdownMenu and Portalist.DropdownMenu:IsShown() then Portalist.DropdownMenu:Hide() DropdownMenuClickCatcher:Hide() end end)
-    DropdownMenuClickCatcher:Hide()
+    local DropdownMenuController = CreateFrame("Frame", nil, UIParent)
+    DropdownMenuController:SetAllPoints(UIParent)
+    DropdownMenuController:SetFrameStrata("LOW")
+    DropdownMenuController:SetFrameLevel(1)
+    DropdownMenuController:EnableMouse(true)
+    DropdownMenuController:SetPropagateMouseClicks(true)
+    DropdownMenuController:SetPropagateKeyboardInput(true)
+    DropdownMenuController:SetScript("OnMouseDown", function() if Portalist.DropdownMenu and Portalist.DropdownMenu:IsShown() then Portalist.DropdownMenu:Hide() DropdownMenuController:Hide() end end)
+    DropdownMenuController:SetScript("OnKeyDown", function(self, key) if key == "ESCAPE" and Portalist.DropdownMenu and Portalist.DropdownMenu:IsShown() then Portalist.DropdownMenu:Hide() DropdownMenuController:Hide() end end)
+    DropdownMenuController:Hide()
 
-    Portalist.DropdownClickCatcher = DropdownMenuClickCatcher
+    Portalist.DropdownMenuController = DropdownMenuController
 end
 
 function Portalist:RefreshDropdownMenu()
@@ -160,10 +162,10 @@ function Portalist:ToggleDropdownMenu()
     if not Portalist.DropdownMenu then Portalist:CreateDropdownMenu() end
     if Portalist.DropdownMenu:IsShown() then
         Portalist.DropdownMenu:Hide()
-        Portalist.DropdownClickCatcher:Hide()
+        Portalist.DropdownMenuController:Hide()
     else
         Portalist:RefreshDropdownMenu()
-        Portalist.DropdownClickCatcher:Show()
+        Portalist.DropdownMenuController:Show()
         Portalist.DropdownMenu:Show()
 
         local cursorX, cursorY = GetCursorPosition()
