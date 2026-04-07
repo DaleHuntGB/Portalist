@@ -21,7 +21,7 @@ local function CreatePortalButton(buttonName, spellData)
     end
     PortalButton.SpellData = spellData
 
-    PortalButton:SetScript("PostClick", function() Portalist.DropdownMenu:Hide() end)
+    PortalButton:SetScript("PostClick", function() Portalist.DropdownMenu:Hide() Portalist.DropdownMenuController:Hide() end)
 
     local ButtonDurationStatusBar = CreateFrame("StatusBar", nil, PortalButton)
     ButtonDurationStatusBar:SetPoint("TOPLEFT", PortalButton, "TOPLEFT", 1, -1)
@@ -154,7 +154,7 @@ function Portalist:CreateDropdownMenu()
    DropdownMenu:SetSize(DB.Width, #Portalist.DropdownMenu.Buttons > 0 and #Portalist.DropdownMenu.Buttons * (Portalist.DB.global.General.Buttons.Height + 1) + 3 or Portalist.DB.global.General.Buttons.Height)
    if #Portalist.DropdownMenu.Buttons == 0 then Portalist.DropdownMenu.DisclaimerText:Show() else Portalist.DropdownMenu.DisclaimerText:Hide() end
 
-    local DropdownMenuController = CreateFrame("Frame", nil, UIParent)
+    local DropdownMenuController = CreateFrame("Frame", "PortalistDropdownMenuController", UIParent)
     DropdownMenuController:SetAllPoints(UIParent)
     DropdownMenuController:SetFrameStrata("LOW")
     DropdownMenuController:SetFrameLevel(1)
