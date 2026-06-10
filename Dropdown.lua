@@ -48,7 +48,7 @@ local function CreatePortalButton(buttonName, spellData, parent)
     PortalButton.ButtonIcon = ButtonIcon
 
     local ButtonSpellText = ButtonDurationStatusBar:CreateFontString(nil, "OVERLAY")
-    ButtonSpellText:SetFont("Fonts\\FRIZQT__.TTF", DB.Text.Size, "OUTLINE")
+    ButtonSpellText:SetFont("Fonts\\FRIZQT__.TTF", DB.Text.Size, "OUTLINE, SLUG")
     ButtonSpellText:SetPoint("LEFT", ButtonIcon, "RIGHT", 3, 0.1)
     ButtonSpellText:SetText(spellData.name)
     ButtonSpellText:SetWidth(PortalButton:GetWidth() * 0.6)
@@ -60,7 +60,7 @@ local function CreatePortalButton(buttonName, spellData, parent)
     PortalButton.ButtonSpellText = ButtonSpellText
 
     local ButtonDurationText = ButtonDurationStatusBar:CreateFontString(nil, "OVERLAY")
-    ButtonDurationText:SetFont("Fonts\\FRIZQT__.TTF", DB.Text.Size, "OUTLINE")
+    ButtonDurationText:SetFont("Fonts\\FRIZQT__.TTF", DB.Text.Size, "OUTLINE, SLUG")
     ButtonDurationText:SetPoint("RIGHT", PortalButton, "RIGHT", -2, 0.1)
     ButtonDurationText:SetTextColor(DB.Text.DurationColour.r, DB.Text.DurationColour.g, DB.Text.DurationColour.b, DB.Text.DurationColour.a)
     ButtonDurationText:SetJustifyH("RIGHT")
@@ -127,7 +127,7 @@ local function CreateGroupButton(buttonName, groupData)
     ButtonIcon:SetTexture(groupData.icon or (groupData.portals[1] and C_Spell.GetSpellInfo(groupData.portals[1].ID) and C_Spell.GetSpellInfo(groupData.portals[1].ID).iconID))
 
     local ButtonText = GroupButton:CreateFontString(nil, "OVERLAY")
-    ButtonText:SetFont("Fonts\\FRIZQT__.TTF", DB.Text.Size, "OUTLINE")
+    ButtonText:SetFont("Fonts\\FRIZQT__.TTF", DB.Text.Size, "OUTLINE, SLUG")
     ButtonText:SetPoint("LEFT", ButtonIcon, "RIGHT", 3, 0.1)
     ButtonText:SetText(groupData.name)
     ButtonText:SetTextColor(DB.Text.NormalColour.r, DB.Text.NormalColour.g, DB.Text.NormalColour.b, DB.Text.NormalColour.a)
@@ -136,7 +136,7 @@ local function CreateGroupButton(buttonName, groupData)
     ButtonText:SetJustifyH("LEFT")
 
     local ArrowText = GroupButton:CreateFontString(nil, "OVERLAY")
-    ArrowText:SetFont("Fonts\\FRIZQT__.TTF", DB.Text.Size, "OUTLINE")
+    ArrowText:SetFont("Fonts\\FRIZQT__.TTF", DB.Text.Size, "OUTLINE, SLUG")
     ArrowText:SetPoint("RIGHT", GroupButton, "RIGHT", -2, 0.1)
     ArrowText:SetText(">")
     ArrowText:SetTextColor(DB.Text.NormalColour.r, DB.Text.NormalColour.g, DB.Text.NormalColour.b, DB.Text.NormalColour.a)
@@ -204,7 +204,7 @@ function Portalist:CreateDropdownMenu()
     DropdownMenu:Hide()
 
     local DisclaimerText = DropdownMenu:CreateFontString(nil, "OVERLAY")
-    DisclaimerText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+    DisclaimerText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE, SLUG")
     DisclaimerText:SetPoint("CENTER", DropdownMenu, "CENTER", 0, 0)
     DisclaimerText:SetText("|cFFCCCCCCNo Portals Chosen or Available!|r")
     DisclaimerText:SetJustifyH("CENTER")
@@ -270,15 +270,15 @@ function Portalist:RefreshColours()
         portalButton:SetBackdropBorderColor(buttonDB.BorderColour.r, buttonDB.BorderColour.g, buttonDB.BorderColour.b, buttonDB.BorderColour.a)
         portalButton:SetScript("OnEnter", function() portalButton:SetBackdropColor(buttonDB.HighlightColour.r, buttonDB.HighlightColour.g, buttonDB.HighlightColour.b, buttonDB.HighlightColour.a) end)
         portalButton:SetScript("OnLeave", function() portalButton:SetBackdropColor(buttonDB.BackgroundColour.r, buttonDB.BackgroundColour.g, buttonDB.BackgroundColour.b, buttonDB.BackgroundColour.a) end)
-        portalButton.ButtonDurationStatusBar:SetStatusBarColor(buttonDB.DurationColour.r, buttonDB.DurationColour.g, buttonDB.DurationColour.b, buttonDB.DurationColour.a)
+        if portalButton.ButtonDurationStatusBar then portalButton.ButtonDurationStatusBar:SetStatusBarColor(buttonDB.DurationColour.r, buttonDB.DurationColour.g, buttonDB.DurationColour.b, buttonDB.DurationColour.a) end
         local buttonData = portalButton.SpellData
         local spellTextColour = buttonDB.Text.NormalColour
         if buttonData then
             local isLearnt = buttonData.isSpell and Portalist:IsLearnt(buttonData.ID, true) or Portalist:IsLearnt(buttonData.ID, false)
             if not isLearnt then spellTextColour = buttonDB.Text.UnusableColour end
         end
-        portalButton.ButtonSpellText:SetTextColor(spellTextColour.r, spellTextColour.g, spellTextColour.b, spellTextColour.a)
-        portalButton.ButtonDurationText:SetTextColor(buttonDB.Text.DurationColour.r, buttonDB.Text.DurationColour.g, buttonDB.Text.DurationColour.b, buttonDB.Text.DurationColour.a)
+        if portalButton.ButtonSpellText then portalButton.ButtonSpellText:SetTextColor(spellTextColour.r, spellTextColour.g, spellTextColour.b, spellTextColour.a) end
+        if portalButton.ButtonDurationText then portalButton.ButtonDurationText:SetTextColor(buttonDB.Text.DurationColour.r, buttonDB.Text.DurationColour.g, buttonDB.Text.DurationColour.b, buttonDB.Text.DurationColour.a) end
     end
 end
 
@@ -298,9 +298,9 @@ function Portalist:RefreshSizes()
         if not portalButton.GroupData then
             portalButton.ButtonIcon:SetSize(Portalist.DB.global.General.Buttons.Height - 4, Portalist.DB.global.General.Buttons.Height - 4)
             portalButton.ButtonSpellText:SetWidth(portalButton:GetWidth() * 0.6)
-            portalButton.ButtonSpellText:SetFont("Fonts\\FRIZQT__.TTF", Portalist.DB.global.General.Buttons.Text.Size, "OUTLINE")
+            portalButton.ButtonSpellText:SetFont("Fonts\\FRIZQT__.TTF", Portalist.DB.global.General.Buttons.Text.Size, "OUTLINE, SLUG")
             portalButton.ButtonDurationText:SetPoint("RIGHT", portalButton, "RIGHT", -2, 0.1)
-            portalButton.ButtonDurationText:SetFont("Fonts\\FRIZQT__.TTF", Portalist.DB.global.General.Buttons.Text.Size, "OUTLINE")
+            portalButton.ButtonDurationText:SetFont("Fonts\\FRIZQT__.TTF", Portalist.DB.global.General.Buttons.Text.Size, "OUTLINE, SLUG")
             portalButton.ButtonDurationStatusBar:SetHeight(Portalist.DB.global.General.Buttons.Height - 2)
         end
     end
