@@ -303,12 +303,12 @@ function Portalist:CreateGUI()
         Portalist.KeybindCaptureFrame = keybindCaptureFrame
     end
 
-    local function CreateToggleList(parent, dataList, activeTable, isSpell)
-        local ScrollContainer = AG:Create("ScrollFrame")
+    local function CreateToggleList(parent, dataList, activeTable, isSpell, scrollContainer)
+        local ScrollContainer = scrollContainer or AG:Create("ScrollFrame")
         ScrollContainer:SetLayout("Flow")
         ScrollContainer:SetFullWidth(true)
         ScrollContainer:SetFullHeight(true)
-        parent:AddChild(ScrollContainer)
+        if not scrollContainer then parent:AddChild(ScrollContainer) end
 
         if isSpell then
             if dataList == Portalist.Data.ChallengeModePortals then
@@ -369,12 +369,17 @@ function Portalist:CreateGUI()
         GUIContainer:ReleaseChildren()
         if TabGroup == "ChallengeModePortals" then
             CreateToggleList(GUIContainer, Portalist.Data.ChallengeModePortals, DB.ChallengeModePortals, true)
-        elseif TabGroup == "Housing" then
+        elseif TabGroup == "Hearthstones" then
 			local ScrollContainer = AG:Create("ScrollFrame")
 			ScrollContainer:SetLayout("Flow")
 			ScrollContainer:SetFullWidth(true)
 			ScrollContainer:SetFullHeight(true)
 			GUIContainer:AddChild(ScrollContainer)
+
+			local HousingHeader = AG:Create("Heading")
+			HousingHeader:SetText("Housing")
+			HousingHeader:SetFullWidth(true)
+			ScrollContainer:AddChild(HousingHeader)
 
 			local housingID = 1233637
 			local spellData = C_Spell.GetSpellInfo(housingID)
@@ -390,8 +395,13 @@ function Portalist:CreateGUI()
 			Toggle:SetCallback("OnLeave", function() GameTooltip:Hide() end)
 			Toggle:SetDisabled(not Portalist:IsHousingUsable())
 			ScrollContainer:AddChild(Toggle)
-        elseif TabGroup == "Hearthstones" then
-            CreateToggleList(GUIContainer, Portalist.Data.Hearthstones, DB.Hearthstones, false)
+
+			local HearthstonesHeader = AG:Create("Heading")
+			HearthstonesHeader:SetText("Hearthstones")
+			HearthstonesHeader:SetFullWidth(true)
+			ScrollContainer:AddChild(HearthstonesHeader)
+
+            CreateToggleList(GUIContainer, Portalist.Data.Hearthstones, DB.Hearthstones, false, ScrollContainer)
         elseif TabGroup == "Wormholes" then
             CreateToggleList(GUIContainer, Portalist.Data.Wormholes, DB.Wormholes, false)
         elseif TabGroup == "Portals" then
@@ -407,7 +417,6 @@ function Portalist:CreateGUI()
     TabGroup:SetLayout("Flow")
     TabGroup:SetTabs({
         { text = "Challenge Mode Portals", value = "ChallengeModePortals" },
-		{ text = "Housing", value = "Housing" },
         { text = "Hearthstones", value = "Hearthstones" },
         { text = "Wormholes", value = "Wormholes" },
         { text = "Portals", value = "Portals" },
