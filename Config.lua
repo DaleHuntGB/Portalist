@@ -369,6 +369,27 @@ function Portalist:CreateGUI()
         GUIContainer:ReleaseChildren()
         if TabGroup == "ChallengeModePortals" then
             CreateToggleList(GUIContainer, Portalist.Data.ChallengeModePortals, DB.ChallengeModePortals, true)
+        elseif TabGroup == "Housing" then
+			local ScrollContainer = AG:Create("ScrollFrame")
+			ScrollContainer:SetLayout("Flow")
+			ScrollContainer:SetFullWidth(true)
+			ScrollContainer:SetFullHeight(true)
+			GUIContainer:AddChild(ScrollContainer)
+
+			local housingID = 1233637
+			local spellData = C_Spell.GetSpellInfo(housingID)
+			local spellTexture = spellData and spellData.iconID or 134414
+			local housingName = _G.HOUSING_DASHBOARD_TELEPORT_TO_PLOT or "Teleport Home"
+			local housingColour = Portalist:IsHousingUsable() and "FFFFFFFF" or "FFFF4040"
+			local Toggle = AG:Create("CheckBox")
+			Toggle:SetLabel(string.format("|T%s:24:24|t |c%s%s|r", spellTexture, housingColour, housingName))
+			Toggle:SetValue(DB.Housing[housingID] == true)
+			Toggle:SetRelativeWidth(0.5)
+			Toggle:SetCallback("OnValueChanged", function(_, _, value) DB.Housing[housingID] = value Portalist:GenerateDropdownData() end)
+			Toggle:SetCallback("OnEnter", function() GameTooltip:SetOwner(Toggle.frame, "ANCHOR_CURSOR") GameTooltip:SetText(housingName, 1, 1, 1) GameTooltip:Show() end)
+			Toggle:SetCallback("OnLeave", function() GameTooltip:Hide() end)
+			Toggle:SetDisabled(not Portalist:IsHousingUsable())
+			ScrollContainer:AddChild(Toggle)
         elseif TabGroup == "Hearthstones" then
             CreateToggleList(GUIContainer, Portalist.Data.Hearthstones, DB.Hearthstones, false)
         elseif TabGroup == "Wormholes" then
@@ -386,6 +407,7 @@ function Portalist:CreateGUI()
     TabGroup:SetLayout("Flow")
     TabGroup:SetTabs({
         { text = "Challenge Mode Portals", value = "ChallengeModePortals" },
+		{ text = "Housing", value = "Housing" },
         { text = "Hearthstones", value = "Hearthstones" },
         { text = "Wormholes", value = "Wormholes" },
         { text = "Portals", value = "Portals" },

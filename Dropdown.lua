@@ -9,11 +9,21 @@ local function CreatePortalButton(buttonName, spellData, parent)
     PortalButton:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8X8", edgeFile = "Interface\\Buttons\\WHITE8X8", edgeSize = 1, })
     PortalButton:SetBackdropColor(DB.BackgroundColour.r, DB.BackgroundColour.g, DB.BackgroundColour.b, DB.BackgroundColour.a)
     PortalButton:SetBackdropBorderColor(DB.BorderColour.r, DB.BorderColour.g, DB.BorderColour.b, DB.BorderColour.a)
-    PortalButton:SetScript("OnEnter", function() PortalButton:SetBackdropColor(DB.HighlightColour.r, DB.HighlightColour.g, DB.HighlightColour.b, DB.HighlightColour.a) Portalist:FetchTooltipInformationOnDropdown(parent, PortalButton, spellData.ID, spellData.isSpell) end)
+    PortalButton:SetScript("OnEnter", function() PortalButton:SetBackdropColor(DB.HighlightColour.r, DB.HighlightColour.g, DB.HighlightColour.b, DB.HighlightColour.a) Portalist:FetchTooltipInformationOnDropdown(parent, PortalButton, spellData.ID, spellData.isSpell, spellData.isHousing) end)
     PortalButton:SetScript("OnLeave", function() PortalButton:SetBackdropColor(DB.BackgroundColour.r, DB.BackgroundColour.g, DB.BackgroundColour.b, DB.BackgroundColour.a) GameTooltip:Hide() end)
     PortalButton:RegisterForClicks("AnyUp", "AnyDown")
 
-    if spellData.isSpell then
+    if spellData.isHousing then
+		local houseInfo = Portalist:GetHouseInfo()
+		if Portalist:CanReturn() then
+			PortalButton:SetAttribute("type", "returnhome")
+		else
+			PortalButton:SetAttribute("type", "teleporthome")
+			PortalButton:SetAttribute("house-neighborhood-guid", houseInfo.neighborhoodGUID)
+			PortalButton:SetAttribute("house-guid", houseInfo.houseGUID)
+			PortalButton:SetAttribute("house-plot-id", houseInfo.plotID)
+		end
+    elseif spellData.isSpell then
         PortalButton:SetAttribute("type", "spell")
         PortalButton:SetAttribute("spell", spellData.ID)
     else
@@ -38,7 +48,13 @@ local function CreatePortalButton(buttonName, spellData, parent)
     local ButtonIcon = ButtonDurationStatusBar:CreateTexture(nil, "OVERLAY")
     ButtonIcon:SetPoint("LEFT", PortalButton, "LEFT", 2, 0)
     ButtonIcon:SetSize(DB.Height - 4, DB.Height - 4)
-    if spellData.isSpell then
+    if spellData.isHousing then
+		if Portalist:CanReturn() then
+			ButtonIcon:SetAtlas("dashboard-panel-homestone-teleport-out-button")
+		else
+			ButtonIcon:SetTexture(C_Spell.GetSpellTexture(spellData.ID))
+		end
+    elseif spellData.isSpell then
         ButtonIcon:SetTexture(C_Spell.GetSpellInfo(spellData.ID).iconID)
     else
         local itemTexture = select(10, C_Item.GetItemInfo(spellData.ID))
@@ -53,7 +69,7 @@ local function CreatePortalButton(buttonName, spellData, parent)
     ButtonSpellText:SetText(spellData.name)
     ButtonSpellText:SetWidth(PortalButton:GetWidth() * 0.6)
     ButtonSpellText:SetWordWrap(false)
-    local isLearnt = spellData.isSpell and Portalist:IsLearnt(spellData.ID, true) or Portalist:IsLearnt(spellData.ID, false)
+    local isLearnt = spellData.isHousing or spellData.isSpell and Portalist:IsLearnt(spellData.ID, true) or Portalist:IsLearnt(spellData.ID, false)
     if not isLearnt then ButtonSpellText:SetTextColor(DB.Text.UnusableColour.r, DB.Text.UnusableColour.g, DB.Text.UnusableColour.b, DB.Text.UnusableColour.a) else ButtonSpellText:SetTextColor(DB.Text.NormalColour.r, DB.Text.NormalColour.g, DB.Text.NormalColour.b, DB.Text.NormalColour.a) end
     ButtonSpellText:SetJustifyH("LEFT")
 
@@ -67,7 +83,35 @@ local function CreatePortalButton(buttonName, spellData, parent)
 
     PortalButton.ButtonDurationText = ButtonDurationText
 
-    if spellData.isSpell then
+    if spellData.isHousing then
+		PortalButton:SetScript("OnUpdate", function()
+			if Portalist:CanReturn() then
+				ButtonDurationText:SetText("")
+				ButtonDurationStatusBar:SetMinMaxValues(0, 1)
+				ButtonDurationStatusBar:SetValue(0)
+				PortalButton:SetScript("OnUpdate", nil)
+				return
+			end
+			local cooldownInfo = C_Housing.GetVisitCooldownInfo()
+			local startTime = cooldownInfo and cooldownInfo.startTime
+			local duration = cooldownInfo and cooldownInfo.duration
+			if cooldownInfo and cooldownInfo.isEnabled and startTime and startTime > 0 and duration and duration > 0 then
+				local remainingCooldown = startTime + duration - GetTime()
+				if remainingCooldown > 3600 then
+					ButtonDurationText:SetText(string.format("%1dh %02dm", math.floor(remainingCooldown / 3600), math.floor((remainingCooldown % 3600) / 60)))
+				else
+					ButtonDurationText:SetText(string.format("%02dm %02ds", math.floor(remainingCooldown / 60), remainingCooldown % 60))
+				end
+				ButtonDurationStatusBar:SetMinMaxValues(0, duration)
+				ButtonDurationStatusBar:SetValue(remainingCooldown)
+			else
+				ButtonDurationText:SetText("")
+				ButtonDurationStatusBar:SetMinMaxValues(0, 1)
+				ButtonDurationStatusBar:SetValue(0)
+				PortalButton:SetScript("OnUpdate", nil)
+			end
+		end)
+    elseif spellData.isSpell then
         PortalButton:SetScript("OnUpdate", function()
             local spellCooldown = C_Spell.GetSpellCooldown(spellData.ID)
             if spellCooldown and spellCooldown.startTime > 0 then
@@ -220,6 +264,8 @@ function Portalist:CreateDropdownMenu()
         local isUsable = false
         if spellData.isGroup then
             isUsable = true
+        elseif spellData.isHousing then
+			isUsable = Portalist:IsHousingUsable()
         elseif spellData.isSpell then
             isUsable = Portalist:IsSpellUsable(spellData.ID)
         else
@@ -274,7 +320,7 @@ function Portalist:RefreshColours()
         local buttonData = portalButton.SpellData
         local spellTextColour = buttonDB.Text.NormalColour
         if buttonData then
-            local isLearnt = buttonData.isSpell and Portalist:IsLearnt(buttonData.ID, true) or Portalist:IsLearnt(buttonData.ID, false)
+            local isLearnt = buttonData.isHousing or buttonData.isSpell and Portalist:IsLearnt(buttonData.ID, true) or Portalist:IsLearnt(buttonData.ID, false)
             if not isLearnt then spellTextColour = buttonDB.Text.UnusableColour end
         end
         if portalButton.ButtonSpellText then portalButton.ButtonSpellText:SetTextColor(spellTextColour.r, spellTextColour.g, spellTextColour.b, spellTextColour.a) end

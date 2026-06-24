@@ -249,6 +249,10 @@ Portalist.Data.Hearthstones = {
     [180290]        = true,
 }
 
+Portalist.Data.Housing = {
+	[1233637]       = true,
+}
+
 Portalist.Data.Wormholes = {
     [18984]        = true,
 	[18986]        = true,
@@ -373,6 +377,34 @@ function Portalist:CreateDisplayName(spellID, isSpell)
     end
 end
 
+Portalist.HouseData = Portalist.HouseData or {}
+
+function Portalist:CanReturn()
+	return C_HousingNeighborhood and C_HousingNeighborhood.CanReturnAfterVisitingHouse()
+end
+
+function Portalist:HasHouse()
+	return #Portalist.HouseData > 0
+end
+
+function Portalist:GetHouseInfo()
+	if #Portalist.HouseData == 0 then return end
+	if #Portalist.HouseData == 1 or UnitFactionGroup("player") == "Alliance" then return Portalist.HouseData[1] end
+	return Portalist.HouseData[2]
+end
+
+function Portalist:LoadHouses()
+	if C_Housing and C_Housing.HasHousingExpansionAccess() then C_Housing.GetPlayerOwnedHouses() end
+end
+
+local HousingEvents = CreateFrame("Frame")
+HousingEvents:RegisterEvent("PLAYER_HOUSE_LIST_UPDATED")
+HousingEvents:SetScript("OnEvent", function(_, _, housingInfo)
+	Portalist.HouseData = housingInfo or {}
+	Portalist:GenerateDropdownData()
+	if Portalist.DropdownMenu and Portalist.DropdownMenu:IsShown() and not InCombatLockdown() then Portalist:RefreshDropdownMenu() end
+end)
+
 function Portalist:IsLearnt(spellID, isSpell)
     if isSpell then
         return C_SpellBook.IsSpellKnown(spellID)
@@ -391,10 +423,12 @@ function Portalist:FetchTooltipInformation(parent, spellID, isSpell)
     GameTooltip:Show()
 end
 
-function Portalist:FetchTooltipInformationOnDropdown(parent, buttonParent, spellID, isSpell)
+function Portalist:FetchTooltipInformationOnDropdown(parent, buttonParent, spellID, isSpell, isHousing)
     GameTooltip:SetOwner(parent, "ANCHOR_NONE")
     GameTooltip:SetPoint("BOTTOMLEFT", parent, "TOPLEFT", 1, 1)
-    if isSpell then
+	if isHousing then
+		GameTooltip:SetText((Portalist:CanReturn() and _G.HOUSING_DASHBOARD_RETURN or _G.HOUSING_DASHBOARD_TELEPORT_TO_PLOT) or "Teleport Home", 1, 1, 1)
+    elseif isSpell then
         GameTooltip:SetSpellByID(spellID)
     else
         GameTooltip:SetToyByItemID(spellID)
@@ -412,8 +446,18 @@ function Portalist:IsItemUsable(itemID)
     return isUsable
 end
 
+function Portalist:IsHousingUsable()
+	return C_Housing and C_Housing.HasHousingExpansionAccess() and (Portalist:CanReturn() or Portalist:HasHouse())
+end
+
 function Portalist:GenerateDropdownData()
     local DropdownData = {}
+
+	for housingID, isActive in pairs(Portalist.DB.global.Housing or {}) do
+		if isActive and Portalist:IsHousingUsable() then
+			table.insert(DropdownData, { ID = housingID, name = (Portalist:CanReturn() and _G.HOUSING_DASHBOARD_RETURN or _G.HOUSING_DASHBOARD_TELEPORT_TO_PLOT) or "Teleport Home", isHousing = true, sortOrder = 1 })
+		end
+	end
 
     local seasonalPortals = {}
     for spellID, isActive in pairs(Portalist.DB.global.ChallengeModePortals) do

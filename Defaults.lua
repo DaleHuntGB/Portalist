@@ -93,6 +93,9 @@ local Defaults = {
             [445424]    = false,
             [1254555]   = false,
         },
+        Housing = {
+			[1233637]   = false,
+		},
         Hearthstones = {
             [54452]     = false,
             [64488]     = false,
